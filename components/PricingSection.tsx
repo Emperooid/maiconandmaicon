@@ -32,8 +32,6 @@ const COLORS = {
   After:     "#6ee7b7",
 };
 
-const DARK = "#1c402e";
-
 function naira(v: number) {
   return `₦${(v / 1000).toFixed(0)}k`;
 }
@@ -58,13 +56,16 @@ function XTick({ x = 0, y = 0, payload }: { x?: number; y?: number; payload?: { 
   );
 }
 
+interface TooltipEntry { name: string; value: number; color: string; }
+interface LegendEntry  { value: string; color: string; }
+
 /* Custom tooltip */
-function ChartTooltip({ active, payload, label }: any) {
+function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: TooltipEntry[]; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
     <div style={{ background: "#122b1e", border: "1px solid rgba(5,188,96,0.4)", borderRadius: 10, padding: "10px 14px", fontFamily: "Roboto,sans-serif" }}>
       <p style={{ color: "#05bc60", fontWeight: 700, fontSize: 12, marginBottom: 8 }}>{label}</p>
-      {payload.map((entry: any) => (
+      {payload.map((entry) => (
         <div key={entry.name} style={{ display: "flex", justifyContent: "space-between", gap: 24, fontSize: 12, marginBottom: 3 }}>
           <span style={{ color: "rgba(255,255,255,0.6)" }}>{entry.name}</span>
           <span style={{ color: "#fff", fontWeight: 600 }}>₦{Number(entry.value).toLocaleString()}</span>
@@ -75,10 +76,10 @@ function ChartTooltip({ active, payload, label }: any) {
 }
 
 /* Custom legend */
-function ChartLegend({ payload }: any) {
+function ChartLegend({ payload }: { payload?: LegendEntry[] }) {
   return (
     <div style={{ display: "flex", gap: 20, justifyContent: "flex-end", marginBottom: 12 }}>
-      {payload?.map((entry: any) => (
+      {payload?.map((entry) => (
         <span key={entry.value} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontFamily: "Roboto,sans-serif", color: "rgba(255,255,255,0.65)" }}>
           <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: entry.color }} />
           {entry.value}
