@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
-const companies = [
-  { name: "Moniepoint",         domain: "moniepoint.com",         careers: "https://moniepoint.com/careers" },
+const companies: { name: string; domain: string; careers: string; logoUrl?: string | false }[] = [
+  { name: "Moniepoint",         domain: "moniepoint.com",         careers: "https://moniepoint.com/careers",           logoUrl: false },
   { name: "Paystack",           domain: "paystack.com",           careers: "https://paystack.com/careers" },
   { name: "Flutterwave",        domain: "flutterwave.com",        careers: "https://flutterwave.com/ng/careers" },
   { name: "MTN",                domain: "mtn.com",                careers: "https://mtn.com/careers/" },
@@ -37,11 +37,15 @@ const PALETTE = [
 const palette = (name: string) => PALETTE[name.charCodeAt(0) % PALETTE.length];
 
 /* Silently probes image URLs via JS Image; never shows a broken <img> */
-function CompanyLogo({ name, domain }: { name: string; domain: string }) {
+function CompanyLogo({ name, domain, logoUrl }: { name: string; domain: string; logoUrl?: string | false }) {
   const [src, setSrc] = useState<string | null>(null);
   const col = palette(name);
 
   useEffect(() => {
+    // logoUrl: false → always badge; logoUrl: string → use directly; undefined → probe
+    if (logoUrl === false) return;
+    if (typeof logoUrl === "string") { setSrc(logoUrl); return; }
+
     let dead = false;
     const attempts = [
       `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
@@ -58,7 +62,7 @@ function CompanyLogo({ name, domain }: { name: string; domain: string }) {
     };
     probe();
     return () => { dead = true; };
-  }, [domain]);
+  }, [domain, logoUrl]);
 
   if (src) {
     return (
@@ -141,7 +145,7 @@ export default function CompaniesSection() {
               {/* Green dot — signals tappability on all devices */}
               <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-black/10 group-hover:bg-brand-green transition-colors duration-200" />
 
-              <CompanyLogo name={c.name} domain={c.domain} />
+              <CompanyLogo name={c.name} domain={c.domain} logoUrl={c.logoUrl} />
 
               <span className="text-[10px] font-semibold text-black/38 group-hover:text-brand-dark text-center leading-tight transition-colors duration-200 w-full px-0.5">
                 {c.name}
