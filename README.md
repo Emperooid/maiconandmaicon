@@ -2,7 +2,7 @@
 
 Official website for **Maicon & Maicon** — a Nigerian career repositioning and professional branding consultancy helping professionals at every stage tell their career story clearly and compellingly.
 
-**Live site:** [maiconandmaicon.com](https://maiconandmaicon.com)
+**Live site:** [maiconandmaicon.vercel.app](https://maiconandmaicon.vercel.app)
 
 ---
 
